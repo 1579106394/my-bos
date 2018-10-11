@@ -17,6 +17,14 @@ import './lib/mui/css/icons-extra.css'
 // 导入VueResource
 import VueResource from 'vue-resource'
 Vue.use(VueResource)
+Vue.http.options.root = 'http://localhost:8080/';
+// 全局启用 emulateJSON 选项
+Vue.http.options.emulateJSON = true;
+
+// 导入elementui
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
 
 var vm = new Vue({
   el: '#app',
