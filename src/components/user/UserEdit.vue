@@ -12,19 +12,20 @@
                 <el-input v-model="ruleForm.userTelephone"></el-input>
             </el-form-item>
             <el-form-item label="所属部门">
-                <el-select v-model="ruleForm.userRole.roleId" placeholder="请选择部门">
-                    <el-option v-for="role in roleList" :key="role.roleId" :label="role.roleName" :value="role.roleId">{{ role.roleName }}</el-option>
-                </el-select>
+                    <el-select v-model="ruleForm.userRole.roleId" placeholder="请选择部门">
+                            <el-option v-for="role in roleList" :key="role.roleId" 
+                            :label="role.roleName" :value="role.roleId">{{ role.roleName }}</el-option>
+                        </el-select>
             </el-form-item>
 
             <el-form-item label="性别">
                 <el-radio-group v-model="ruleForm.userSex">
-                    <el-radio label="1">男</el-radio>
-                    <el-radio label="2">女</el-radio>
+                    <el-radio :label="1">男</el-radio>
+                    <el-radio :label="2">女</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -36,15 +37,7 @@
         data() {
 
             return {
-                ruleForm: {
-                    userName: '',
-                    userAge: '',
-                    userTelephone: '',
-                    userRole: {
-                        roleId: ''
-                    },
-                    userSex: ''
-                },
+                ruleForm: this.user,
                 roleList: [],
                 rules: {
                     userName: [
@@ -59,21 +52,24 @@
                 }
             };
         },
+        props: [
+            'user'
+        ],
         methods: {
-            submitForm(formName) {
+            submitForm(formName) { // 提交表单
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         var param = this.setParams(this.ruleForm)
-                        this.$http.post('api/user/addUser', param).then(result => {
+                        this.$http.post('api/user/editUser', param).then(result => {
                             if (result.body.status === 200) {
                                 this.$message({
-                                    message: '添加用户成功',
+                                    message: '修改用户成功',
                                     type: 'success',
                                     duration: 2000
                                 });
 
-                                // 清空输入框
-                                this.$refs[formName].resetFields()
+                                // 叉掉弹窗
+                                this.$emit('changeDialog', false)
 
                             } else {
                                 this.$message({
@@ -84,11 +80,13 @@
                             }
                         }, result => {
                             this.$message({
-                                message: result.body.msg,
+                                message: '修改失败！',
                                 type: 'error',
                                 duration: 2000
                             });
                         })
+
+                        
                     } else {
                         return false;
                     }
@@ -106,10 +104,14 @@
                 return JSON.stringify(params)
             }
         },
+        watch: {
+            user(newVal, oldVal) {
+                this.ruleForm = newVal
+            }
+        },
         created() {
-            this.$emit('cardName', '新增员工')
             this.getRoleList()
-        }
+        },
     }
 </script>
 

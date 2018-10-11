@@ -22,8 +22,15 @@
                         <i class="mui-icon mui-icon-chatboxes"></i>
                         <span slot="title">部门管理</span>
                     </template>
-                    <el-menu-item index="2-1">部门列表</el-menu-item>
-                    <el-menu-item index="2-2">新增部门</el-menu-item>
+
+                    <router-link to="/roleList">
+                        <el-menu-item index="2-1">部门列表</el-menu-item>
+                    </router-link>
+
+                    <router-link to="/roleAdd">
+                        <el-menu-item index="2-2">新增部门</el-menu-item>
+                    </router-link>
+
                     <el-menu-item index="2-3">部门裁员</el-menu-item>
                     <el-menu-item index="2-4">部门员工</el-menu-item>
                 </el-submenu>
@@ -51,7 +58,7 @@
                     </el-menu-item>
 
                     <!-- 刷新 -->
-                    <el-menu-item index="1">
+                    <el-menu-item index="1" @click="refresh">
                         <el-button type="text">
                             <i class="el-icon-refresh"></i>
                         </el-button>
@@ -79,7 +86,7 @@
     export default {
         data() {
             return {
-                isCollapse: true,
+                isCollapse: false,
                 activeIndex: '1',
                 activeIndex2: '1',
                 cardName: '',   // 子组件传递过来的卡片名称
@@ -91,6 +98,10 @@
             },
             getCardName(name) { // 获取子组件传递过来的卡片名称
                 this.cardName = name
+            },
+            refresh() {
+                // 点击刷新
+                this.$router.go(0)
             }
         }
     }
