@@ -37,7 +37,7 @@
         data() {
 
             return {
-                ruleForm: this.user,
+                ruleForm: {},
                 roleList: [],
                 rules: {
                     userName: [
@@ -60,7 +60,7 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         var param = this.setParams(this.ruleForm)
-                        this.$http.post('api/user/editUser', param).then(result => {
+                        this.$http.put('api/user/editUser', param).then(result => {
                             if (result.body.status === 200) {
                                 this.$message({
                                     message: '修改用户成功',
@@ -110,6 +110,7 @@
             }
         },
         created() {
+            this.ruleForm = this.user
             this.getRoleList()
         },
     }

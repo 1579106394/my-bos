@@ -17,9 +17,22 @@ import './lib/mui/css/icons-extra.css'
 // 导入VueResource
 import VueResource from 'vue-resource'
 Vue.use(VueResource)
-Vue.http.options.root = 'http://localhost:8080/';
+Vue.http.options.root = 'http://localhost:8080/'
 // 全局启用 emulateJSON 选项
-Vue.http.options.emulateJSON = true;
+// Vue.http.options.xhr = { withCredentials: true }
+Vue.http.options.emulateJSON = true
+
+Vue.http.interceptors.push(function (request, next) { // 拦截器
+  // 跨域携带cookie
+  if (request.url != 'userLogin')
+
+    request.credentials = true
+
+  next()
+})
+
+// 引入jq
+import $ from 'jquery'
 
 // 导入elementui
 import ElementUI from 'element-ui'
@@ -28,7 +41,7 @@ Vue.use(ElementUI)
 
 var vm = new Vue({
   el: '#app',
-  data: {},
+  data: {
+  },
   render: c => c(app),
-  router
-})
+router})

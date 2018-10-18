@@ -47,7 +47,7 @@
 
                         })
                         if (flag) {
-                            this.$http.post('api/role/editRole', param).then(result => {
+                            this.$http.put('api/role/editRole', param).then(result => {
                                 if (result.body.status === 200) {
                                     this.$message({
                                         message: '修改部门成功',

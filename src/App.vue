@@ -31,8 +31,6 @@
                         <el-menu-item index="2-2">新增部门</el-menu-item>
                     </router-link>
 
-                    <el-menu-item index="2-3">部门裁员</el-menu-item>
-                    <el-menu-item index="2-4">部门员工</el-menu-item>
                 </el-submenu>
                 <el-menu-item index="3">
                     <i class="mui-icon mui-icon-gear"></i>
@@ -93,6 +91,12 @@
             };
         },
         methods: {
+            getMenuList() {
+                // 获取菜单列表
+                this.$http.get('api/auth/authList').then(result=>{
+                    console.log(result.body)
+                })
+            },
             changeCollapse() {
                 this.isCollapse = !this.isCollapse
             },
@@ -103,6 +107,9 @@
                 // 点击刷新
                 this.$router.go(0)
             }
+        },
+        created () {
+            this.getMenuList()
         }
     }
 </script>

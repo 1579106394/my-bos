@@ -1,10 +1,10 @@
 <template>
     <div>
-        <el-table @sort-change='sortChange' v-loading="loading" :data="roleList" style="width: 100%">
-            <el-table-column prop="roleId" label="编号" sortable="custom">
+        <el-table v-loading="loading" :data="roleList" style="width: 100%">
+            <el-table-column prop="roleId" label="编号">
             </el-table-column>
 
-            <el-table-column prop="roleName" label="姓名" sortable="custom">
+            <el-table-column prop="roleName" label="姓名">
             </el-table-column>
 
 
@@ -25,6 +25,11 @@
             <edit :role="role" @changeRole="changeRoleMethod"></edit>
         </el-dialog>
 
+        <!-- 部门员工弹窗 -->
+        <el-dialog width="80%" title="部门员工" :visible.sync="changeRoleUser">
+            <roleUser :role="role" @changeRoleUser="changeRoleUserMethod"></roleUser>
+        </el-dialog>
+
 
 
     </div>
@@ -33,12 +38,16 @@
 <script>
 
     import edit from '../role/RoleEdit.vue'
+    import roleUser from '../role/RoleUserList.vue'
+
+    var that = this
 
     export default {
         data() {
             return {
                 loading: true,
                 changeRole: false,
+                changeRoleUser: false,
                 roleList: [],
                 role: { // 点击编辑，传递给弹窗的role对象
 
@@ -51,6 +60,7 @@
                 this.loading = true
                 this.$http.get('api/role/roleList').then(result => {
                     if (result.body.status === 200) {
+                        console.log(result.body.data)
                         this.roleList = result.body.data
                     }
                 }, result => {
@@ -63,6 +73,10 @@
                 this.changeRole = true
                 this.role = row
             },
+            userList(row) {
+                this.changeRoleUser = true
+                this.role = row
+            },
             deleteRole(row) {
                 // 弹窗提示：是否删除
                 this.$confirm('是否删除该部门?', '提示', {
@@ -72,7 +86,7 @@
                 }).then(() => {
                     // 点击“是”回调，发送请求
 
-                    this.$http.get('api/role/deleteRole/' + row.roleId).then(result => {
+                    this.$http.delete('api/role/deleteRole/' + row.roleId).then(result => {
                         if (result.body.status === 200) {
                             // 删除成功
                             this.$message({
@@ -99,14 +113,6 @@
                 });
 
             },
-            sortChange: function (column) {
-                // 排序表格
-                // this.page.params.orderName = column.prop
-                // if (column.order != null) {
-                //     this.page.params.order = column.order.replace("ending", "")
-                // }
-                this.getRoleList()
-            },
             setParams(params) {
                 // 参数修改为json
                 return JSON.stringify(params)
@@ -114,10 +120,14 @@
             changeRoleMethod(changeRole) {
                 // 叉掉弹窗
                 this.changeRole = changeRole
+            },
+            changeRoleUserMethod(changeRoleUser) {
+                this.changeRoleUser = changeRoleUser
             }
         },
         components: {
-            edit
+            edit,
+            roleUser
         },
         created() {
             this.$emit('cardName', '部门列表')
